@@ -1,0 +1,38 @@
+[
+  "div",
+  {},
+  "",
+  [
+    "html",
+    {},
+    [
+      "head",
+      {},
+      [
+        "title",
+        {},
+        "Templates and their content"
+      ],
+      "\n"
+    ],
+    [
+      "body",
+      {},
+      "\n",
+      [
+        "template",
+        {
+          "id": "text"
+        }
+      ],
+      "\n\n",
+      [
+        "template",
+        {
+          "id": "html"
+        }
+      ],
+      "\n"
+    ]
+  ]
+]

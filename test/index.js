@@ -9,8 +9,7 @@ import glob from 'glob'
 import {JSDOM} from 'jsdom'
 import {webNamespaces} from 'web-namespaces'
 import {h, s} from 'hastscript'
-import serialize from 'w3c-xmlserializer'
-import {toDom} from '../index.js'
+import {toTiptap} from '../index.js'
 
 const window = new JSDOM().window
 const document = window.document
@@ -20,165 +19,170 @@ globalThis.document = document
 test('hast-util-to-dom', (t) => {
   t.equal(
     // @ts-expect-error runtime.
-    serializeNodeToHtmlString(toDom({type: 'root'})),
-    '',
+    serializeNodeToHtmlString(toTiptap({type: 'root'})),
+    '["div",{}]',
     'creates an empty root node'
   )
 
   t.equal(
     serializeNodeToHtmlString(
-      toDom({
+      toTiptap({
         type: 'root',
         children: [
           {type: 'element', tagName: 'html', properties: {}, children: []}
         ]
       })
     ),
-    '<html></html>',
+    '["div",{},["html",{}]]',
     'creates a root node with a document element'
   )
 
-  t.equal(
-    serializeNodeToHtmlString(
-      toDom({
-        type: 'root',
-        children: [
-          {type: 'doctype', name: 'html'},
-          {
-            type: 'element',
-            tagName: 'html',
-            properties: {},
-            children: [
-              {type: 'element', tagName: 'head', properties: {}, children: []},
-              {type: 'element', tagName: 'body', properties: {}, children: []}
-            ]
-          }
-        ]
-      })
-    ),
-    '<!DOCTYPE html><html><head></head><body></body></html>',
-    'creates a root node with a doctype'
-  )
+  // T.equal(
+  //   serializeNodeToHtmlString(
+  //     toTiptap({
+  //       type: 'root',
+  //       children: [
+  //         {type: 'doctype', name: 'html'},
+  //         {
+  //           type: 'element',
+  //           tagName: 'html',
+  //           properties: {},
+  //           children: [
+  //             {type: 'element', tagName: 'head', properties: {}, children: []},
+  //             {type: 'element', tagName: 'body', properties: {}, children: []}
+  //           ]
+  //         }
+  //       ]
+  //     })
+  //   ),
+  //   '<!DOCTYPE html><html><head></head><body></body></html>',
+  //   'creates a root node with a doctype'
+  // )
 
   t.equal(
-    serializeNodeToHtmlString(toDom({type: 'text', value: 'hello world'})),
-    'hello world',
+    serializeNodeToHtmlString(toTiptap({type: 'text', value: 'hello world'})),
+    '"hello world"',
     'creates a text node'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('div'))),
-    '<div></div>',
+    serializeNodeToHtmlString(toTiptap(h('div'))),
+    '["div",{}]',
     'creates an element node'
   )
 
   t.equal(
     // @ts-expect-error runtime.
-    serializeNodeToHtmlString(toDom({type: 'something-else'})),
-    '<div></div>',
+    serializeNodeToHtmlString(toTiptap({type: 'something-else'})),
+    '["div",{}]',
     'creates an unknown node in HTML'
   )
 
   t.equal(
     serializeNodeToHtmlString(
       // @ts-expect-error runtime.
-      toDom({type: 'something-else'}, {namespace: webNamespaces.svg})
+      toTiptap({type: 'something-else'}, {namespace: webNamespaces.svg})
     ),
-    '<g/>',
+    '["g",{}]',
     'creates an unknown node in SVG'
   )
 
   t.equal(
     serializeNodeToHtmlString(
-      toDom({
+      toTiptap({
         // @ts-expect-error runtime.
         type: 'something-else',
         children: [{type: 'text', value: 'value'}]
       })
     ),
-    '<div>value</div>',
+    '["div",{},"value"]',
     'creates an unknown node (with children)'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('span', ['hello', 'world']))),
-    '<span>helloworld</span>',
+    serializeNodeToHtmlString(toTiptap(h('span', ['hello', 'world']))),
+    '["span",{},"hello","world"]',
     'creates text nodes inside an element node'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('#foo.bar', 'text'))),
-    '<div id="foo" class="bar">text</div>',
+    serializeNodeToHtmlString(toTiptap(h('#foo.bar', 'text'))),
+    '["div",{"id":"foo","class":"bar"},"text"]',
     'creates an html element'
   )
 
   t.equal(
     serializeNodeToHtmlString(
-      toDom(s('#foo.bar', s('circle')), {namespace: webNamespaces.svg})
+      toTiptap(s('#foo.bar', s('circle')), {namespace: webNamespaces.svg})
     ),
-    '<g id="foo" class="bar"><circle/></g>',
+    '["g",{"id":"foo","class":"bar"},["circle",{}]]',
     'creates SVG elements'
   )
 
   t.equal(
     serializeNodeToHtmlString(
-      toDom(h('input', {disabled: true, value: 'foo'}))
+      toTiptap(h('input', {disabled: true, value: 'foo'}))
     ),
-    '<input disabled="" value="foo" />',
+    // '<input disabled="" value="foo" />',
+    '["input",{"disabled":"","value":"foo"}]',
     'creates an input node with some attributes'
   )
 
   t.equal(
     serializeNodeToHtmlString(
-      toDom(h('input', {type: 'checkbox', checked: true}))
+      toTiptap(h('input', {type: 'checkbox', checked: true}))
     ),
-    '<input type="checkbox" checked="" />',
+    // '<input type="checkbox" checked="" />',
+    '["input",{"type":"checkbox","checked":""}]',
     'creates an checkbox where `checked` must be set as a property'
   )
 
   t.equal(
     serializeNodeToHtmlString(
-      toDom({
+      toTiptap({
         type: 'element',
         tagName: 'div',
         properties: {allowFullScreen: false},
         children: []
       })
     ),
-    '<div></div>',
+    '["div",{}]',
     'handles falsey booleans correctly'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('div', {class: ['foo', 'bar']}))),
-    '<div class="foo bar"></div>',
+    serializeNodeToHtmlString(toTiptap(h('div', {class: ['foo', 'bar']}))),
+    // '<div class="foo bar"></div>',
+    '["div",{"class":"foo bar"}]',
     'handles space-separated attributes correctly'
   )
 
   t.equal(
     serializeNodeToHtmlString(
-      toDom(h('input', {type: 'file', accept: ['image/*', '.doc']}))
+      toTiptap(h('input', {type: 'file', accept: ['image/*', '.doc']}))
     ),
-    `<input type="file" accept="image/*, .doc" />`,
+    // `<input type="file" accept="image/*, .doc" />`,
+    '["input",{"type":"file","accept":"image/*, .doc"}]',
     'handles comma-separated attributes correctly'
   )
 
-  t.equal(
-    // @ts-expect-error hast types out of date.
-    serializeNodeToHtmlString(toDom({type: 'doctype'})),
-    '<!DOCTYPE html>',
-    'creates a doctype node'
-  )
+  // T.equal(
+  //   // @ts-expect-error hast types out of date.
+  //   serializeNodeToHtmlString(toTiptap({type: 'doctype'})),
+  //   '<!DOCTYPE html>',
+  //   'creates a doctype node'
+  // )
 
   t.equal(
-    serializeNodeToHtmlString(toDom({type: 'comment', value: 'after'})),
-    '<!--after-->',
+    serializeNodeToHtmlString(toTiptap({type: 'comment', value: 'after'})),
+    // '<!--after-->',
+    '""',
     'creates a comment'
   )
 
   t.equal(
     serializeNodeToHtmlString(
-      toDom(
+      toTiptap(
         h('.alpha', [
           'bravo ',
           h('b', 'charlie'),
@@ -187,175 +191,186 @@ test('hast-util-to-dom', (t) => {
         ])
       )
     ),
-    '<div class="alpha">bravo <b>charlie</b> delta <a class="echo" download="">foxtrot</a></div>',
+    // '<div class="alpha">bravo <b>charlie</b> delta <a class="echo" download="">foxtrot</a></div>',
+    '["div",{"class":"alpha"},"bravo ",["b",{},"charlie"]," delta ",["a",{"class":"echo","download":""},"foxtrot"]]',
     'creates nested nodes with attributes'
   )
 
-  t.equal(
-    serializeNodeToHtmlString(
-      toDom({
-        type: 'root',
-        children: [
-          {
-            type: 'element',
-            tagName: 'title',
-            properties: {},
-            children: [{type: 'text', value: 'Hi'}]
-          },
-          {
-            type: 'element',
-            tagName: 'h2',
-            properties: {},
-            children: [{type: 'text', value: 'Hello world!'}]
-          }
-        ]
-      })
-    ),
-    '<html><title>Hi</title><h2>Hello world!</h2></html>',
-    'wraps a fragment in an HTML element'
-  )
+  // t.equal(
+  //   serializeNodeToHtmlString(
+  //     toTiptap({
+  //       type: 'root',
+  //       children: [
+  //         {
+  //           type: 'element',
+  //           tagName: 'title',
+  //           properties: {},
+  //           children: [{type: 'text', value: 'Hi'}]
+  //         },
+  //         {
+  //           type: 'element',
+  //           tagName: 'h2',
+  //           properties: {},
+  //           children: [{type: 'text', value: 'Hello world!'}]
+  //         }
+  //       ]
+  //     })
+  //   ),
+  //   '<html><title>Hi</title><h2>Hello world!</h2></html>',
+  //   'wraps a fragment in an HTML element'
+  // )
+
+  // t.equal(
+  //   serializeNodeToHtmlString(
+  //     toTiptap(
+  //       {
+  //         type: 'root',
+  //         children: [
+  //           {
+  //             type: 'element',
+  //             tagName: 'title',
+  //             properties: {},
+  //             children: [{type: 'text', value: 'Hi'}]
+  //           },
+  //           {
+  //             type: 'element',
+  //             tagName: 'h2',
+  //             properties: {},
+  //             children: [{type: 'text', value: 'Hello world!'}]
+  //           }
+  //         ]
+  //       },
+  //       {}
+  //     )
+  //   ),
+  //   '<title>Hi</title><h2>Hello world!</h2>',
+  //   'does not wrap a fragment when the option is specified'
+  // )
+
+  // t.equal(
+  //   serializeNodeToHtmlString(
+  //     toTiptap(
+  //       {type: 'root', children: [h('html')]},
+  //       {namespace: 'http://example.com'}
+  //     )
+  //   ),
+  //   '<html xmlns="http://example.com"/>',
+  //   'should support a given namespace'
+  // )
+
+  // const doc = {
+  //   /**
+  //    * @param {string} namespace
+  //    * @param {string} tagName
+  //    */
+  //   createElementNS(namespace, tagName) {
+  //     const name = tagName === 'h1' ? 'h2' : tagName
+  //     return document.createElementNS(namespace, name)
+  //   },
+  //   /**
+  //    * @param {string} value
+  //    */
+  //   createTextNode(value) {
+  //     return document.createTextNode(value.toUpperCase())
+  //   },
+  //   implementation: {
+  //     /**
+  //      * @param {string} namespace
+  //      * @param {string} qualifiedName
+  //      * @param {DocumentType} documentType
+  //      */
+  //     createDocument(namespace, qualifiedName, documentType) {
+  //       return document.implementation.createDocument(
+  //         namespace,
+  //         qualifiedName,
+  //         documentType
+  //       )
+  //     }
+  //   }
+  // }
+
+  // t.equal(
+  //   serializeNodeToHtmlString(
+  //     toTiptap(
+  //       {
+  //         type: 'root',
+  //         children: [h('html', [h('title', 'foo'), h('h1', 'bar')])]
+  //       },
+  //       // @ts-expect-error Minimum of what we need.
+  //       {document: doc}
+  //     )
+  //   ),
+  //   '<html><title>FOO</title><h2>BAR</h2></html>',
+  //   'should support a given document'
+  // )
 
   t.equal(
-    serializeNodeToHtmlString(
-      toDom(
-        {
-          type: 'root',
-          children: [
-            {
-              type: 'element',
-              tagName: 'title',
-              properties: {},
-              children: [{type: 'text', value: 'Hi'}]
-            },
-            {
-              type: 'element',
-              tagName: 'h2',
-              properties: {},
-              children: [{type: 'text', value: 'Hello world!'}]
-            }
-          ]
-        },
-        {fragment: true}
-      )
-    ),
-    '<title>Hi</title><h2>Hello world!</h2>',
-    'does not wrap a fragment when the option is specified'
-  )
-
-  t.equal(
-    serializeNodeToHtmlString(
-      toDom(
-        {type: 'root', children: [h('html')]},
-        {namespace: 'http://example.com'}
-      )
-    ),
-    '<html xmlns="http://example.com"/>',
-    'should support a given namespace'
-  )
-
-  const doc = {
-    /**
-     * @param {string} namespace
-     * @param {string} tagName
-     */
-    createElementNS(namespace, tagName) {
-      const name = tagName === 'h1' ? 'h2' : tagName
-      return document.createElementNS(namespace, name)
-    },
-    /**
-     * @param {string} value
-     */
-    createTextNode(value) {
-      return document.createTextNode(value.toUpperCase())
-    },
-    implementation: {
-      /**
-       * @param {string} namespace
-       * @param {string} qualifiedName
-       * @param {DocumentType} documentType
-       */
-      createDocument(namespace, qualifiedName, documentType) {
-        return document.implementation.createDocument(
-          namespace,
-          qualifiedName,
-          documentType
-        )
-      }
-    }
-  }
-
-  t.equal(
-    serializeNodeToHtmlString(
-      toDom(
-        {
-          type: 'root',
-          children: [h('html', [h('title', 'foo'), h('h1', 'bar')])]
-        },
-        // @ts-expect-error Minimum of what we need.
-        {document: doc}
-      )
-    ),
-    '<html><title>FOO</title><h2>BAR</h2></html>',
-    'should support a given document'
-  )
-
-  t.equal(
-    serializeNodeToHtmlString(toDom(h('div', {ariaChecked: true}))),
-    '<div aria-checked="true"></div>',
+    serializeNodeToHtmlString(toTiptap(h('div', {ariaChecked: true}))),
+    // '<div aria-checked="true"></div>',
+    '["div",{"aria-checked":true}]',
     'handles booleanish attribute with `true` value correctly'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('div', {ariaChecked: false}))),
-    '<div aria-checked="false"></div>',
+    serializeNodeToHtmlString(toTiptap(h('div', {ariaChecked: false}))),
+    // '<div aria-checked="false"></div>',
+    '["div",{"aria-checked":false}]',
     'handles booleanish attribute with `false` value correctly'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('div', {ariaChecked: 'mixed'}))),
-    '<div aria-checked="mixed"></div>',
+    serializeNodeToHtmlString(toTiptap(h('div', {ariaChecked: 'mixed'}))),
+    // '<div aria-checked="mixed"></div>',
+    '["div",{"aria-checked":"mixed"}]',
     'handles booleanish attribute with value correctly'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('div', {dataTest: false}))),
-    '<div></div>',
-    'ignores data properties when value is `false`'
+    serializeNodeToHtmlString(toTiptap(h('div', {dataTest: false}))),
+    // '<div></div>',
+    '["div",{}]',
+    'does not ignore data properties when value is `false`'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('div', {dataTest: Number.NaN}))),
-    '<div></div>',
+    serializeNodeToHtmlString(toTiptap(h('div', {dataTest: Number.NaN}))),
+    // '<div></div>',
+    '["div",{}]',
     'ignores data properties when value is `NaN`'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('div', {dataTest: 0}))),
-    '<div data-test="0"></div>',
+    serializeNodeToHtmlString(toTiptap(h('div', {dataTest: 0}))),
+    // '<div data-test="0"></div>',
+    '["div",{"data-test":0}]',
     'encodes data properties when a number'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('div', {dataTest: true}))),
-    '<div data-test=""></div>',
+    serializeNodeToHtmlString(toTiptap(h('div', {dataTest: true}))),
+    // '<div data-test=""></div>',
+    '["div",{"data-test":""}]',
     'encodes data properties w/o value `true`'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('div', {dataTest: ''}))),
-    '<div data-test=""></div>',
+    serializeNodeToHtmlString(toTiptap(h('div', {dataTest: ''}))),
+    '["div",{"data-test":""}]',
+    // '<div data-test=""></div>',
     'encodes data properties when an empty string'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('div', {dataTest: 'data-test'}))),
-    '<div data-test="data-test"></div>',
+    serializeNodeToHtmlString(toTiptap(h('div', {dataTest: 'data-test'}))),
+    // '<div data-test="data-test"></div>',
+    '["div",{"data-test":"data-test"}]',
     'encodes data properties when string'
   )
 
   t.equal(
-    serializeNodeToHtmlString(toDom(h('div', {data123: 'dataTest'}))),
-    '<div data-123="dataTest"></div>',
+    serializeNodeToHtmlString(toTiptap(h('div', {data123: 'dataTest'}))),
+    // '<div data-123="dataTest"></div>',
+    '["div",{"data-123":"dataTest"}]',
     'encodes data properties when string'
   )
 
@@ -363,7 +378,7 @@ test('hast-util-to-dom', (t) => {
     (() => {
       /** @type {Array<[HastNode, string]>} */
       const calls = []
-      toDom(h('html', [h('title', 'Hi')]), {
+      toTiptap(h('html', [h('title', 'Hi')]), {
         afterTransform(node, transformed) {
           calls.push([node, serializeNodeToHtmlString(transformed)])
         }
@@ -371,9 +386,9 @@ test('hast-util-to-dom', (t) => {
       return calls
     })(),
     [
-      [{type: 'text', value: 'Hi'}, 'Hi'],
-      [h('title', 'Hi'), '<title>Hi</title>'],
-      [h('html', [h('title', 'Hi')]), '<html><title>Hi</title></html>']
+      [{type: 'text', value: 'Hi'}, '"Hi"'],
+      [h('title', 'Hi'), '["title",{},"Hi"]'],
+      [h('html', [h('title', 'Hi')]), '["html",{},["title",{},"Hi"]]']
     ],
     'should invoke afterTransform'
   )
@@ -398,10 +413,10 @@ test('fixtures', (t) => {
   function each(fixturePath) {
     const fixture = path.relative(root, fixturePath)
     const fixtureInput = path.join(fixturePath, 'index.json')
-    const fixtureOutput = path.join(fixturePath, 'index.html')
+    const fixtureOutput = path.join(fixturePath, 'result.json')
     /** @type {HastNode} */
     const fixtureData = JSON.parse(String(fs.readFileSync(fixtureInput)))
-    const parsedActual = serializeNodeToHtmlString(toDom(fixtureData))
+    const parsedActual = serializeNodeToHtmlString(toTiptap(fixtureData), null, '  ')
     /** @type {string} */
     let parsedExpected
 
@@ -417,16 +432,9 @@ test('fixtures', (t) => {
 })
 
 /**
- * @param {Node} node
+ * @param {import('../lib/index.js').TiptapResult} node
+ * @param {any} args
  */
-function serializeNodeToHtmlString(node) {
-  const serialized = serialize(node)
-
-  // XMLSerializer puts xmlns on “main” elements that are not in the XML
-  // namespace.
-  // We’d like to inspect that, but having the HTML namespace everywhere will
-  // get unwieldy, so remove those.
-  return serialized
-    .replace(new RegExp(` xmlns="${webNamespaces.html}"`, 'g'), '')
-    .replace(new RegExp(`(<(?:svg|g)) xmlns="${webNamespaces.svg}"`, 'g'), '$1')
+function serializeNodeToHtmlString(node, ...args) {
+  return JSON.stringify(node, ...args);
 }
