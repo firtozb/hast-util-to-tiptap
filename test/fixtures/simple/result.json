@@ -5,15 +5,7 @@
   [
     "html",
     {},
-    [
-      "head",
-      {},
-      [
-        "title",
-        {},
-        "Hello!"
-      ]
-    ],
+    ["head", {}, ["title", {}, "Hello!"]],
     [
       "body",
       {},

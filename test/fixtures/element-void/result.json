@@ -10,107 +10,18 @@
     }
   ],
   "\n\n",
-  [
-    "hr",
-    {}
-  ],
+  ["hr", {}],
   "\n\n",
-  [
-    "p",
-    {},
-    "this",
-    [
-      "br",
-      {}
-    ],
-    "and that"
-  ],
+  ["p", {}, "this", ["br", {}], "and that"],
   "\n\n",
-  [
-    "p",
-    {},
-    "this",
-    [
-      "br",
-      {}
-    ],
-    "and that"
-  ],
+  ["p", {}, "this", ["br", {}], "and that"],
   "\n\n",
-  [
-    "svg",
-    {},
-    [
-      "path",
-      {},
-      [
-        "circle",
-        {},
-        [
-          "g",
-          {},
-          [
-            "rect",
-            {}
-          ]
-        ]
-      ]
-    ]
-  ],
+  ["svg", {}, ["path", {}, ["circle", {}, ["g", {}, ["rect", {}]]]]],
   "\n\n",
-  [
-    "svg",
-    {},
-    [
-      "path",
-      {}
-    ],
-    [
-      "circle",
-      {}
-    ],
-    [
-      "g",
-      {}
-    ],
-    [
-      "rect",
-      {}
-    ]
-  ],
+  ["svg", {}, ["path", {}], ["circle", {}], ["g", {}], ["rect", {}]],
   "\n\n",
-  [
-    "math",
-    {},
-    [
-      "mglyph",
-      {},
-      [
-        "mspace",
-        {},
-        [
-          "malignmark",
-          {}
-        ]
-      ]
-    ]
-  ],
+  ["math", {}, ["mglyph", {}, ["mspace", {}, ["malignmark", {}]]]],
   "\n\n",
-  [
-    "math",
-    {},
-    [
-      "mglyph",
-      {}
-    ],
-    [
-      "mspace",
-      {}
-    ],
-    [
-      "malignmark",
-      {}
-    ]
-  ],
+  ["math", {}, ["mglyph", {}], ["mspace", {}], ["malignmark", {}]],
   "\n"
 ]

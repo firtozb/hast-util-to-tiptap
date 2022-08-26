@@ -5,16 +5,7 @@
   [
     "html",
     {},
-    [
-      "head",
-      {},
-      [
-        "title",
-        {},
-        "Templates and their content"
-      ],
-      "\n"
-    ],
+    ["head", {}, ["title", {}, "Templates and their content"], "\n"],
     [
       "body",
       {},
