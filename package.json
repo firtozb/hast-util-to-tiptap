@@ -1,7 +1,7 @@
 {
-  "name": "hast-util-to-dom",
+  "name": "hast-util-to-tiptap",
   "version": "3.1.0",
-  "description": "hast utility to transform to the DOM",
+  "description": "hast utility to transform to be used by TipTap renderHTML",
   "license": "ISC",
   "keywords": [
     "unist",
@@ -13,8 +13,8 @@
     "dom",
     "html"
   ],
-  "repository": "syntax-tree/hast-util-to-dom",
-  "bugs": "https://github.com/syntax-tree/hast-util-to-dom/issues",
+  "repository": "firtozb/hast-util-to-tiptap",
+  "bugs": "https://github.com/firtozb/hast-util-to-tiptap/issues",
   "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/unified"
@@ -22,7 +22,8 @@
   "author": "Keith McKnight <keith@mcknig.ht> (https://keith.mcknig.ht)",
   "contributors": [
     "Keith McKnight <keith@mcknig.ht> (https://keith.mcknig.ht)",
-    "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
+    "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
+    "Firtina Ozbalikci <hello@firtoz.com> (https://firtoz.com)"
   ],
   "sideEffects": false,
   "type": "module",
