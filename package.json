@@ -1,6 +1,6 @@
 {
   "name": "hast-util-to-tiptap",
-  "version": "3.1.0",
+  "version": "0.0.1",
   "description": "hast utility to transform to be used by TipTap renderHTML",
   "license": "ISC",
   "keywords": [
