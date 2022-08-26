@@ -15,9 +15,8 @@
 *   [What is this?](#what-is-this)
 *   [When should I use this?](#when-should-i-use-this)
 *   [Install](#install)
-*   [Use](#use)
 *   [API](#api)
-    *   [`toTipTap(node[, options])`](#totipTap-options)
+    *   [`toTipTap(node[, options])`](#totiptapnode-options)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Security](#security)
@@ -31,7 +30,8 @@ This package is a utility that creates a TipTap tree.
 
 ## When should I use this?
 
-You can use this project when you want to turn hast into a TipTap node tree for renderHTML.
+You can use this project when you want to turn hast into a
+TipTap node tree for renderHTML.
 
 ## Install
 
@@ -66,7 +66,7 @@ Called when a hast node was transformed into a DOM node
 
 ##### Returns
 
-[`TipTap`][tipTapTree].
+\[`TipTap`]\[tipTapTree].
 
 ## Types
 
@@ -84,7 +84,7 @@ Our projects sometimes work with older versions, but this is not guaranteed.
 
 Use of `hast-util-to-tiptap` can open you up to a
 [cross-site scripting (XSS)][xss] attack if the hast tree is unsafe.
-Use [`hast-util-santize`][hast-util-sanitize] to make the hast tree safe.
+Use [`hast-util-sanitize`][hast-util-sanitize] to make the hast tree safe.
 
 ## Related
 
@@ -99,7 +99,7 @@ Use [`hast-util-santize`][hast-util-sanitize] to make the hast tree safe.
 
 ## Contribute
 
-This project has a [code of conduct][coc].
+This project has a \[code of conduct]\[coc].
 By interacting with this repository, organisation, or community you agree to
 abide by its terms.
 
@@ -139,8 +139,6 @@ abide by its terms.
 
 [esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
 
-[esmsh]: https://esm.sh
-
 [typescript]: https://www.typescriptlang.org
 
 [license]: license
@@ -149,16 +147,8 @@ abide by its terms.
 
 [hast]: https://github.com/syntax-tree/hast
 
-[TipTap]: https://tiptap.dev/guide/custom-extensions#render-html
-
-[dom]: https://developer.mozilla.org/docs/Web/API/Document_Object_Model
+[tiptap]: https://tiptap.dev/guide/custom-extensions#render-html
 
 [xss]: https://en.wikipedia.org/wiki/Cross-site_scripting
 
 [hast-util-sanitize]: https://github.com/syntax-tree/hast-util-sanitize
-
-[hast-util-from-dom]: https://github.com/syntax-tree/hast-util-from-dom
-
-[jsdom]: https://github.com/jsdom/jsdom
-
-[rehype-dom-stringify]: https://github.com/rehypejs/rehype-dom/tree/main/packages/rehype-dom-stringify

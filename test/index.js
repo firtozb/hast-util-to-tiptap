@@ -37,27 +37,27 @@ test('hast-util-to-tiptap', (t) => {
     'creates a root node with a document element'
   )
 
-  // T.equal(
-  //   serializeNodeToHtmlString(
-  //     toTiptap({
-  //       type: 'root',
-  //       children: [
-  //         {type: 'doctype', name: 'html'},
-  //         {
-  //           type: 'element',
-  //           tagName: 'html',
-  //           properties: {},
-  //           children: [
-  //             {type: 'element', tagName: 'head', properties: {}, children: []},
-  //             {type: 'element', tagName: 'body', properties: {}, children: []}
-  //           ]
-  //         }
-  //       ]
-  //     })
-  //   ),
-  //   '<!DOCTYPE html><html><head></head><body></body></html>',
-  //   'creates a root node with a doctype'
-  // )
+  t.equal(
+    serializeNodeToHtmlString(
+      toTiptap({
+        type: 'root',
+        children: [
+          {type: 'doctype', name: 'html'},
+          {
+            type: 'element',
+            tagName: 'html',
+            properties: {},
+            children: [
+              {type: 'element', tagName: 'head', properties: {}, children: []},
+              {type: 'element', tagName: 'body', properties: {}, children: []}
+            ]
+          }
+        ]
+      })
+    ),
+    '<!DOCTYPE html><html><head></head><body></body></html>',
+    'creates a root node with a doctype'
+  )
 
   t.equal(
     serializeNodeToHtmlString(toTiptap({type: 'text', value: 'hello world'})),
@@ -196,7 +196,7 @@ test('hast-util-to-tiptap', (t) => {
     'creates nested nodes with attributes'
   )
 
-  // t.equal(
+  // T.equal(
   //   serializeNodeToHtmlString(
   //     toTiptap({
   //       type: 'root',
@@ -416,7 +416,7 @@ test('fixtures', (t) => {
     const fixtureOutput = path.join(fixturePath, 'result.json')
     /** @type {HastNode} */
     const fixtureData = JSON.parse(String(fs.readFileSync(fixtureInput)))
-    const parsedActual = serializeNodeToHtmlString(toTiptap(fixtureData), null, '  ')
+    const parsedActual = serializeNodeToHtmlString(toTiptap(fixtureData), '  ')
     /** @type {string} */
     let parsedExpected
 
@@ -433,8 +433,8 @@ test('fixtures', (t) => {
 
 /**
  * @param {import('../lib/index.js').TiptapResult} node
- * @param {any} args
+ * @param {string} spacer
  */
-function serializeNodeToHtmlString(node, ...args) {
-  return JSON.stringify(node, ...args);
+function serializeNodeToHtmlString(node, spacer = '') {
+  return JSON.stringify(node, null, spacer)
 }
