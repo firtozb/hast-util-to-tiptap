@@ -16,7 +16,7 @@ const document = window.document
 
 globalThis.document = document
 
-test('hast-util-to-dom', (t) => {
+test('hast-util-to-tiptap', (t) => {
   t.equal(
     // @ts-expect-error runtime.
     serializeNodeToHtmlString(toTiptap({type: 'root'})),
